@@ -1,0 +1,232 @@
+/* font face-family: poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+:root {
+  --main-color: #5168f4;
+  --dark-color: #11152a;
+  --light-color: #d0d4ed;
+  --light-color-dark: #bfc3d8;
+}
+* {
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+}
+/* * > * {
+  outline: 1px solid red;
+} */
+body {
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  background-color: var(--light-color);
+}
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.1;
+}
+
+a {
+  text-decoration: none;
+}
+h2 {
+  font-size: 3em;
+  font-weight: normal;
+  color: #fff;
+  margin-bottom: 1.4rem;
+}
+ul {
+  list-style: none;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.wrapper > div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  min-height: 500px;
+  margin: 5em auto;
+  background-color: var(--main-color);
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.45) 0 25px 20px -20px;
+}
+
+:is(.login, .register) > div {
+  position: relative;
+  flex: 1 0 50%;
+  padding: 60px;
+}
+
+.content-heading .y-style {
+  display: flex;
+  flex-direction: column;
+}
+.logo a {
+  display: inline-block;
+  margin-bottom: 3.2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--dark-color);
+}
+
+.logo span {
+  color: #213ef1;
+}
+
+.content-heading p {
+  color: var(--light-color);
+}
+
+.content-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.welcome {
+  text-align: center;
+}
+.under {
+  display: block;
+}
+form input:not(#terms, #remember) {
+  font-family: inherit;
+  width: 100%;
+  margin: 0 0 1.25rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: 7px;
+  border: 1px solid var(--light-color);
+}
+form input::placeholder {
+  color: var(--light-color);
+}
+form .btn {
+  background-color: #eb3b5a;
+  color: #fff;
+  width: 100%;
+  margin: 2rem 0;
+  border: none;
+  line-height: 42px;
+  border-radius: 7px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+
+.btn:hover {
+  background-color: #821428;
+}
+.afterform {
+  text-align: center;
+  margin-top: 1.3rem;
+}
+form .check {
+  position: relative;
+  padding-left: 1.7rem;
+  font-size: 0.8rem;
+}
+
+form .check #terms {
+  width: 17px;
+  aspect-ratio: 1/1;
+}
+form .check input {
+  position: absolute;
+  left: 0;
+  top: 4px;
+}
+form .forget {
+  font-size: 0.8rem;
+}
+form label a,
+.afterform a {
+  color: var(--main-color);
+}
+
+form :is(p, label) a:hover,
+.afterform a:hover {
+  border-bottom: 1px solid;
+}
+
+.content-form::before {
+  content: "";
+  position: absolute;
+  width: 300%;
+  height: 200%;
+  background-color: #fff;
+  border-radius: 50%;
+  transform: translate3d(-27%, 21%, 0);
+}
+
+.y-style {
+  position: relative;
+}
+
+.social :is(ul, p) {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  gap: 1.2rem;
+  margin: 1rem 0 1.2rem;
+}
+.social p::before {
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: 90%;
+  background-color: var(--light-color);
+  top: 0;
+  margin-top: 0.7rem;
+}
+.social p span {
+  background-color: #fff;
+  z-index: 1;
+  padding: 0 20px;
+  color: var(--light-color-dark);
+  font-size: 0.8rem;
+}
+.social a {
+  display: flex;
+  font-size: 1.2rem;
+  transform: translateY(0);
+  transition: transform 0.3s;
+}
+/* .social .or-with {
+  line-height: 1.1;
+  display: inline;
+} */
+.social a:hover {
+  transform: translateY(-5px);
+}
+.social .google {
+  color: #db4437;
+}
+.social .facebook {
+  color: #4267b2;
+}
+.social .twitter {
+  color: #1da1f2;
+}
+@media screen and (min-width: 768px) {
+  .wrapper > div {
+    flex-direction: row;
+    max-width: 850px;
+  }
+  .register .content-heading .y-style {
+    height: 100%;
+    justify-content: space-between;
+  }
+  .content-form::before {
+    width: 200%;
+    transform: translate3d(-18%, -10%, 0);
+  }
+  .welcome {
+    text-align: left;
+    margin: 5em 0 auto;
+  }
+}
