@@ -161,12 +161,33 @@ form :is(p, label) a:hover,
   background-color: #fff;
   border-radius: 50%;
   transform: translate3d(-27%, 21%, 0);
+  animation: move 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
+@keyframes move {
+  from {
+    transform: translate3d(50%, 60%, 0);
+  }
+  to {
+    transform: translate3d(-27%, 21%, 0);
+  }
+}
 .y-style {
   position: relative;
+  transform: translate3d(0, 20%, 0);
+  animation: fade-in 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0%, 0);
+  }
+}
 .social :is(ul, p) {
   display: flex;
   justify-content: center;
@@ -212,6 +233,10 @@ form :is(p, label) a:hover,
 .social .twitter {
   color: #1da1f2;
 }
+.worning {
+  font-size: 0.9rem;
+  color: #db4437;
+}
 @media screen and (min-width: 768px) {
   .wrapper > div {
     flex-direction: row;
@@ -228,5 +253,15 @@ form :is(p, label) a:hover,
   .welcome {
     text-align: left;
     margin: 5em 0 auto;
+  }
+  @keyframes move {
+    from {
+      opacity: 0;
+      transform: translate3d(0%, -100%, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(-18%, -10%, 0);
+    }
   }
 }
