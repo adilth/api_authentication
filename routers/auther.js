@@ -7,8 +7,12 @@ const { registerValidation, loginValidation } = require("../validation");
 const Auth = require("../models/Auth");
 
 router.get("/register", (req, res) => {
-  res.send("hi");
+  res.render("register.ejs");
 });
+router.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+
 router.post("/register", async (req, res) => {
   //validate the data before user
   const { error } = registerValidation(req.body);
@@ -55,4 +59,18 @@ router.post("/login", async (req, res) => {
   res.header("auth-token", token).send(token);
   res.json(`hello ${user.name} you login successfully`);
 });
+
+function ckeckAuthentication(req, res, next) {
+  if (req.session.name) {
+    return next();
+  }
+  res.redirect("/login");
+}
+function nckeckAuthentication(req, res, next) {
+  if (req.session.name) {
+    return res.redirect("/");
+  }
+  next();
+}
+
 module.exports = router;
