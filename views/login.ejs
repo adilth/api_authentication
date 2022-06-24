@@ -25,10 +25,23 @@
                </div>
                <div class="content-form">
                   <div class="y-style">
+                     <%   if(success && success.length) {%>
+                     <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%= success %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                     </div>
+                     <% } %>
+
+                     <% if(error && error.length) {%>
+                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <%= error %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                     </div>
+                     <% } %>
                      <form action="/user/login" method="post">
                         <p>
                            <label for="email">Email</label>
-                           <input type="email" name="name" placeholder="name@email.com" id="email" required>
+                           <input type="email" name="email" placeholder="name@email.com" id="email" required>
                         </p>
                         <p>
                            <label for="password">password</label>
