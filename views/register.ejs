@@ -26,6 +26,9 @@
                </div>
                <div class="content-form">
                   <div class="y-style">
+                     <% if (messages.error) { %>
+                     <%= messages.error %>
+                     <% } %>
                      <form action="/user/register" method="post">
                         <p class="worning" id="worning"></p>
                         <p>
