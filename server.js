@@ -13,7 +13,7 @@ const postsRouter = require("./routers/Posts");
 const PORT = process.env.PORT || 4000;
 const passport = require("passport");
 //connect to DB
-const initializePassport = require("./passport-config");
+const initializePassport = require("./passport-config")(passport);
 mongoose.connect(process.env.CONNECT_DB, () => console.log("Connect to DB"));
 
 //router middleware
@@ -35,6 +35,7 @@ app.use(passport.session());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.errorLogin = req.flash("errorLogin");
   next();
 });
 // Middleware to accept requests from localhost:3000
@@ -45,7 +46,7 @@ app.use(
   })
 );
 app.use("/user", autherRouter);
-app.use("/user", homeRouter);
+app.use("/home", homeRouter);
 app.use("/posts", postsRouter);
 
 app.get("/", (req, res) => {
