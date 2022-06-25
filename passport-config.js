@@ -27,7 +27,7 @@ function initialize(passport, getUserById) {
   passport.serializeUser((user, dane) => dane(null, user.id));
   passport.deserializeUser((id, dane) => {
     User.findById(id, (err, user) => {
-      return dane(null, user);
+      return dane(err, user);
     });
   });
 }
