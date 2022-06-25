@@ -29,20 +29,23 @@
                      <% if (messages.error) { %>
                      <%= messages.error %>
                      <% } %>
+                     <%- include ("./msg/messages"); %>
                      <form action="/user/register" method="post">
                         <p class="worning" id="worning"></p>
                         <p>
                            <label for="name">Name</label>
-                           <input type="text" name="name" placeholder="Enter Your name" id="name" required>
+                           <input type="text" name="name" placeholder="Enter Your name" id="name"
+                              value="<%= typeof name != 'undefined' ? name : '' %>" required>
                         </p>
                         <p>
                            <label for="email">Email</label>
-                           <input type="text" name="email" placeholder="name@email.com" id="email" required>
+                           <input type="text" name="email" placeholder="name@email.com"
+                              value="<%= typeof email != 'undefined' ? email : '' %>" id="email" required>
                         </p>
                         <p>
                            <label for="password">password</label>
                            <input type="password" name="password" value="" placeholder="******** " id="password"
-                              required>
+                              value="<%= typeof password != 'undefined' ? password : '' %>" required>
                         </p>
                         <p class=" check">
                            <input type="checkbox" name="ckeck" id="terms">
