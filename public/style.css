@@ -237,6 +237,12 @@ form :is(p, label) a:hover,
   font-size: 0.9rem;
   color: #db4437;
 }
+.home {
+  text-align: center;
+}
+.home .btn {
+  margin-top: 2.5rem;
+}
 @media screen and (min-width: 768px) {
   .wrapper > div {
     flex-direction: row;
