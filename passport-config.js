@@ -26,7 +26,9 @@ function initialize(passport, getUserById) {
   passport.use(new LocalStregy({ usernameField: "email" }, authenticateUser));
   passport.serializeUser((user, dane) => dane(null, user.id));
   passport.deserializeUser((id, dane) => {
-    return dane(null, getUserById(id));
+    User.findById(id, (err, user) => {
+      return dane(null, user);
+    });
   });
 }
 
