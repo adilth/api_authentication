@@ -4,62 +4,86 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const { registerValidation, loginValidation } = require("../validation");
+const { forwardAuthenticated } = require("./isauth");
 
 const Auth = require("../models/Auth");
 
-router.get("/register", (req, res) => {
+router.get("/register", forwardAuthenticated, (req, res) => {
   res.render("register.ejs");
 });
-router.get("/login", (req, res) => {
+router.get("/login", forwardAuthenticated, (req, res) => {
   res.render("login.ejs");
 });
 
 router.post("/register", async (req, res) => {
   //validate the data before user
+  // const { } = req.body;
+  // let errorMsg = [];
+
   const { error } = registerValidation(req.body);
-  if (error) return res.status(400).json(error.details[0].message);
-
-  //check if the user is already registered
-  const emailExists = await Auth.findOne({ email: req.body.email });
-  if (emailExists)
-    return res.status(400).json({ message: "Email already exists" });
   if (error) {
-    res.render("register", {
-      error,
-      name,
-      email,
-      password,
-    });
+    const { details } = error;
+    const message = details.map((i) => i.message).join(",");
+    console.log("error", message);
+    // errorMsg.push({ msg: message });
+    res.status(422).json({ message });
+    res.render("register", { error: message });
   }
+  const emailExists = await Auth.findOne({ email: req.body.email });
+  if (emailExists) {
+    const message = "User already registered.";
+    // errorMsg.push({ msg: message });
+    res.render("register", { error: message });
+    return;
+  }
+  //check if the user is already registered
 
-  //hah passwords
-  const salt = await bcrypt.genSalt(10);
-  const hashPassword = await bcrypt.hash(req.body.password, salt);
+  // if (error) {
+  //   res.render("register", { error });
+  // }
 
-  //create new user
-  const user = new Auth({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashPassword,
-  });
   try {
+    //hah passwords
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+    //create new user
+    const user = new Auth({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashPassword,
+    });
+
     const saveUser = await user.save();
     req.flash(
       "success",
       "You have successfully created a new user and now you can login"
     );
     // res.json({ saveUser: saveUser._id });
-    res.redirect("/user/login");
+    res.redirect("login");
   } catch (err) {
     res.status(404).json({ message: err.message });
     // res.redirect("/register");
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   //validate the data before user
   const { error } = loginValidation(req.body);
-  if (error) return res.status(400).json(error.details[0].message);
+  if (error) {
+    // return req.flash("errorLogin", `${error.details[0].message}`);
+    // var err = new Error(error.details[0].message);
+    // err.status = 400;
+    // return next(err);
+    const { details } = error;
+    const message = details.map((i) => i.message).join(",");
+    console.log("error", message);
+    // errorMsg.push({ msg: message });
+    // res.status(422).json({ message });
+    res.render("login", { error: message });
+    // res.status(404).send({ message: error.message });
+    return;
+  }
 
   //check if the user is already registered
   const user = await Auth.findOne({ email: req.body.email });
@@ -70,28 +94,26 @@ router.post("/login", async (req, res) => {
   //   return res.status(400).json({ message: "Password is incorrect" });
 
   //create and assign a token
-  const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT);
-  res.header("auth-token", token).send(token);
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/user/login",
-    failureFlash: true,
-  });
+  try {
+    passport.authenticate(
+      "local",
+      {
+        successRedirect: "/home",
+        failureRedirect: "/user/login",
+        failureFlash: true,
+      },
+      (req, res, next) => {
+        const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT);
+        res.header("auth-token", token).send(token);
+        next();
+      }
+    );
+  } catch (err) {
+    res.status(404).json({ messages: err.message });
+  }
+
   // res.json(`hello ${user.name} you login successfully`);
   // res.redirect("/");
 });
-
-function ckeckAuthentication(req, res, next) {
-  if (req.session.name) {
-    return next();
-  }
-  res.redirect("/login");
-}
-function nckeckAuthentication(req, res, next) {
-  if (req.session.name) {
-    return res.redirect("/");
-  }
-  next();
-}
 
 module.exports = router;
