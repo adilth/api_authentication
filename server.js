@@ -5,6 +5,7 @@ const cors = require("cors");
 const flash = require("express-flash");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
+const expressLayouts = require("express-ejs-layouts");
 require("dotenv").config();
 //import routers
 const autherRouter = require("./routers/auther");
@@ -13,13 +14,14 @@ const postsRouter = require("./routers/Posts");
 const PORT = process.env.PORT || 4000;
 const passport = require("passport");
 //connect to DB
-const initializePassport = require("./passport-config")(passport);
+require("./passport-config")(passport);
 mongoose.connect(process.env.CONNECT_DB, () => console.log("Connect to DB"));
 
 //router middleware
 // app.use(express.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
 app.use(express.json());
 app.set("view engine", "ejs");
+app.use(expressLayouts);
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
 app.use(flash());
