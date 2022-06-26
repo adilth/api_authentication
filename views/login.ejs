@@ -11,7 +11,7 @@
 
 <body>
    <div id="page" class="site">
-      <div class="container">
+      <div class="cont">
          <div class="wrapper">
             <div class="login">
                <div class="content-heading">
@@ -25,9 +25,7 @@
                </div>
                <div class="content-form">
                   <div class="y-style">
-                     <%if(typeof error != "undefined"){%>
-                     <%= error.message %>
-                     <%}%>
+
                      <%- include ("./msg/messages"); %>
                      <form action="/user/login" method="post">
                         <p>
