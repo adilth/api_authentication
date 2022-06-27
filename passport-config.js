@@ -1,6 +1,8 @@
 const { Strategy } = require("passport-local");
 const bcrypt = require("bcryptjs");
-
+const passport = require("passport");
+const JwtStrategy = require("passport-jwt").Strategy,
+  ExtractJwt = require("passport-jwt").ExtractJwt;
 //load user model
 const User = require("./models/Auth");
 
@@ -35,6 +37,7 @@ const User = require("./models/Auth");
 
 module.exports = function (passport) {
   passport.use(
+    "local",
     new Strategy({ usernameField: "email" }, (email, password, done) => {
       // Match user
       User.findOne({
@@ -67,3 +70,26 @@ module.exports = function (passport) {
     });
   });
 };
+// module.exports = (passport) => {
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+// opts.jwtFromRequest = cookieExtractor;
+opts.secretOrKey = process.env.SESSION_SECRET;
+passport.use(
+  "jwt",
+  new JwtStrategy(opts, (jwt_payload, done) => {
+    User.findById(jwt_payload.id)
+      .then((user) => {
+        if (user) {
+          return done(null, user);
+        }
+        return done(null, false);
+      })
+      .catch((err) => {
+        console.log("Error in finding user by id in jwt.");
+        return done(err, false);
+      });
+  })
+);
+// };
+// module.exports = passportConfig;
