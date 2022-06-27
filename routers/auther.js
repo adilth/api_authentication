@@ -67,53 +67,76 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
-  //validate the data before user
-  const { error } = loginValidation(req.body);
-  if (error) {
-    // return req.flash("errorLogin", `${error.details[0].message}`);
-    // var err = new Error(error.details[0].message);
-    // err.status = 400;
-    // return next(err);
-    const { details } = error;
-    const message = details.map((i) => i.message).join(",");
-    console.log("error", message);
-    // errorMsg.push({ msg: message });
-    // res.status(422).json({ message });
-    res.render("login", { error: message });
-    // res.status(404).send({ message: error.message });
-    return;
-  }
-
-  //check if the user is already registered
-  const user = await Auth.findOne({ email: req.body.email });
-  // if (!user) return res.status(404).json({ message: "Email not found" });
-
-  // const validPass = await bcrypt.compare(req.body.password, user.password);
-  // if (!validPass)
-  //   return res.status(400).json({ message: "Password is incorrect" });
-
-  //create and assign a token
-  try {
-    passport.authenticate(
-      "local",
-      {
-        successRedirect: "/home",
-        failureRedirect: "/user/login",
-        failureFlash: true,
-      },
-      (req, res, next) => {
-        const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT);
-        res.header("auth-token", token).send(token);
-        next();
+router.post("/login", (req, res, next) => {
+  passport.authenticate(
+    "local",
+    {
+      successRedirect: "/home",
+      failureRedirect: "/login",
+      failureFlash: true,
+    },
+    async (err, users, info) => {
+      //validate the data before user
+      const { error } = loginValidation(req.body);
+      if (err) {
+        const { details } = error;
+        console.log(err);
+        const message = details.map((i) => i.message).join(",");
+        console.log("error", message);
+        // errorMsg.push({ msg: message });
+        // res.status(422).json({ message });
+        res.render("login", { error: message });
+        // res.status(404).send({ message: error.message });
+        return;
       }
-    );
-  } catch (err) {
-    res.status(404).json({ messages: err.message });
-  }
+      if (info != undefined) {
+        console.log(info.message);
+        const { message } = info;
+        res.render("login", { error: message });
+        console.log(message);
+        return;
+      } else {
+        const user = await Auth.findOne({ email: req.body.email });
+        const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT);
+        // res.header("auth-token", token).send(token);
+        res.status(200).send({
+          auth: true,
+          token: token,
+          message: "user found & logged in",
+        });
+      }
 
-  // res.json(`hello ${user.name} you login successfully`);
-  // res.redirect("/");
+      if (error) {
+        // return req.flash("errorLogin", `${error.details[0].message}`);
+        // var err = new Error(error.details[0].message);
+        // err.status = 400;
+        // return next(err);
+      }
+
+      //check if the user is already registered
+
+      // if (!user) return res.status(404).json({ message: "Email not found" });
+
+      // const validPass = await bcrypt.compare(req.body.password, user.password);
+      // if (!validPass)
+      //   return res.status(400).json({ message: "Password is incorrect" });
+
+      //create and assign a token
+      try {
+        // passport.authenticate(
+        //   "local",
+        //   {
+        //     successRedirect: "/home",
+        //     failureRedirect: "/user/login",
+        //     failureFlash: true,
+        //   })(req, res, next)
+
+        next();
+      } catch (err) {
+        res.status(404).json({ messages: err.message });
+      }
+    }
+  )(req, res, next);
 });
 
 module.exports = router;
