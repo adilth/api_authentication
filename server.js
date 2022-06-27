@@ -48,11 +48,11 @@ app.use(
   })
 );
 app.use("/user", autherRouter);
-app.use("/home", homeRouter);
+app.use("/home", passport.authenticate("jwt", { session: false }), homeRouter);
 app.use("/posts", postsRouter);
 
-app.get("/", (req, res) => {
-  res.render("index.ejs");
-});
+// app.get("/", (req, res) => {
+//   res.render("index.ejs");
+// });
 //listent
 app.listen(PORT, () => console.log("it runnig"));
