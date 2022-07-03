@@ -5,7 +5,9 @@ const cors = require("cors");
 const flash = require("express-flash");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const expressLayouts = require("express-ejs-layouts");
+
 require("dotenv").config();
 //import routers
 const autherRouter = require("./routers/auther");
@@ -25,6 +27,7 @@ app.use(expressLayouts);
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
 app.use(flash());
+app.use(cookieParser());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
