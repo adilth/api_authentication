@@ -97,13 +97,17 @@ router.post("/login", (req, res, next) => {
         return;
       } else {
         const user = await Auth.findOne({ email: req.body.email });
-        const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT);
-        // res.header("auth-token", token).send(token);
-        res.status(200).send({
-          auth: true,
-          token: token,
-          message: "user found & logged in",
+        const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT, {
+          expiresIn: "1h",
         });
+        // res.header("auth-token", token).send(token);
+        res.cookie("token", token, { httpOnly: true }).sendStatus(200);
+        // res.redirect("/home");
+        // res.status(200).send({
+        //   auth: true,
+        //   token: token,
+        //   message: "user found & logged in",
+        // });
       }
 
       if (error) {
