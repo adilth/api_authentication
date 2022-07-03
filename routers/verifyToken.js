@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 
-module.exports = function (req, res, next) {
-  const tokenSecret = req.header("auth-token");
-  const token = tokenSecret && tokenSecret.split(" ")[1];
+const verify = function (req, res, next) {
+  const tokenSecret = req.header["auth-token"];
+  const token = req.cookies.token || (tokenSecret && tokenSecret.split(" ")[1]);
   if (!token) return res.status(401).json({ message: "Invalid token" });
 
   try {
@@ -13,3 +13,4 @@ module.exports = function (req, res, next) {
     return res.status(401).json({ message: err.message });
   }
 };
+module.exports = verify;
