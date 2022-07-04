@@ -71,7 +71,7 @@ router.post("/login", (req, res, next) => {
   passport.authenticate(
     "local",
     {
-      successRedirect: "/home",
+      successRedirect: "/",
       failureRedirect: "/login",
       failureFlash: true,
     },
@@ -89,33 +89,13 @@ router.post("/login", (req, res, next) => {
         // res.status(404).send({ message: error.message });
         return;
       }
-      if (info != undefined) {
-        console.log(info.message);
-        const { message } = info;
-        res.render("login", { error: message });
-        console.log(message);
-        return;
-      } else {
-        const user = await Auth.findOne({ email: req.body.email });
-        const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT, {
-          expiresIn: "1h",
-        });
-        // res.header("auth-token", token).send(token);
-        res.cookie("token", token, { httpOnly: true }).sendStatus(200);
-        // res.redirect("/home");
-        // res.status(200).send({
-        //   auth: true,
-        //   token: token,
-        //   message: "user found & logged in",
-        // });
-      }
 
-      if (error) {
-        // return req.flash("errorLogin", `${error.details[0].message}`);
-        // var err = new Error(error.details[0].message);
-        // err.status = 400;
-        // return next(err);
-      }
+      // if (error) {
+      // return req.flash("errorLogin", `${error.details[0].message}`);
+      // var err = new Error(error.details[0].message);
+      // err.status = 400;
+      // return next(err);
+      // }
 
       //check if the user is already registered
 
@@ -127,15 +107,28 @@ router.post("/login", (req, res, next) => {
 
       //create and assign a token
       try {
-        // passport.authenticate(
-        //   "local",
-        //   {
-        //     successRedirect: "/home",
-        //     failureRedirect: "/user/login",
-        //     failureFlash: true,
-        //   })(req, res, next)
+        if (info != undefined) {
+          console.log(info.message);
+          const { message } = info;
+          res.render("login", { error: message });
+          console.log(message);
+          return;
+        } else {
+          const user = await Auth.findOne({ email: req.body.email });
+          const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT, {
+            expiresIn: "1h",
+          });
+          // res.header("auth-token", token).send(token);
+          res.cookie("token", token, { httpOnly: true }).sendStatus(200);
+          // res.redirect("/home" + token);
+          // res.status(200).send({
+          //   auth: true,
+          //   token: token,
+          //   message: "user found & logged in",
+          // });
+        }
 
-        next();
+        // next();
       } catch (err) {
         res.status(404).json({ messages: err.message });
       }
