@@ -71,8 +71,8 @@ router.post("/login", (req, res, next) => {
   passport.authenticate(
     "local",
     {
-      successRedirect: "/",
-      failureRedirect: "/login",
+      successRedirect: "/home",
+      failureRedirect: "/user/login",
       failureFlash: true,
     },
     async (err, users, info) => {
@@ -118,22 +118,40 @@ router.post("/login", (req, res, next) => {
           const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRT, {
             expiresIn: "1h",
           });
-          // res.header("auth-token", token).send(token);
-          res.cookie("token", token, { httpOnly: true }).sendStatus(200);
+          res.cookie("token", token, { httpOnly: true });
+          res.header("x-auth-token", token);
+          //.send({
+          //   success: true,
+          //   token: token,
+          //   message: "logged in",
+          // });
+          // res.status(200).data = {
+          //   user: user,
+          //   token,
+          // };
+          return res.redirect("/home");
           // res.redirect("/home" + token);
           // res.status(200).send({
           //   auth: true,
           //   token: token,
+          //   data: { _id: user.id },
           //   message: "user found & logged in",
           // });
         }
-
-        // next();
       } catch (err) {
+        console.log(err);
         res.status(404).json({ messages: err.message });
       }
     }
   )(req, res, next);
+});
+router.get("/logout", (req, res) => {
+  // req.logout();
+  req.flash("success", "You are logged out");
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.redirect("/home/welcome");
+  });
 });
 
 module.exports = router;
