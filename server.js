@@ -26,17 +26,17 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
-app.use(flash());
 app.use(cookieParser());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: true,
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -50,8 +50,13 @@ app.use(
     credentials: true,
   })
 );
+//current User
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
 app.use("/user", autherRouter);
-app.use("/home", passport.authenticate("jwt", { session: false }), homeRouter);
+app.use("/home", passport.authenticate("session"), homeRouter);
 app.use("/posts", postsRouter);
 
 // app.get("/", (req, res) => {
