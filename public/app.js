@@ -1,6 +1,12 @@
 let password = document.getElementById("password").value;
 // let nameInput = document.getElementById("name").value;
 let worning = document.getElementById("worning");
+const config = {
+  headers: {
+    "Content-Type": "application/json",
+    "x-auth-token": {},
+  },
+};
 // document.querySelector(".btn").addEventListener("click", validate);
 document.querySelector("#login").addEventListener("click", makeRequest);
 // let worningName = document.getElementById("wouning");
@@ -18,7 +24,7 @@ let passw = /^[A-Za-z]\w{7,14}$/;
 //   }
 // }
 
-function makeRequest() {
+function makeRequest(data) {
   fetch("/user/login", {
     method: "POST", // or 'PUT'
     body: JSON.stringify(data), // data can be `string` or {object}!
