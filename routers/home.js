@@ -3,9 +3,8 @@ const router = express.Router();
 const { ensureAuthenticated, forwardAuthenticated } = require("./isauth");
 const verify = require("./verifyToken");
 
-router.get("/", verify, ensureAuthenticated, (req, res) => {
-  res.render("index.ejs");
-  console.log(req);
+router.get("/", ensureAuthenticated, verify, (req, res) => {
+  res.render("index.ejs", { name: req.user.name });
 });
 router.get("/welcome", forwardAuthenticated, (req, res) => {
   res.render("welcome.ejs");
