@@ -37,7 +37,6 @@ const User = require("./models/Auth");
 
 module.exports = function (passport) {
   passport.use(
-    "local",
     new Strategy(
       { usernameField: "email", passwordField: "password" },
       async (email, password, done) => {
@@ -53,7 +52,9 @@ module.exports = function (passport) {
 
           // Match password
           bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) throw err;
+            if (err) {
+              return done(err);
+            }
             if (isMatch) {
               return done(null, user);
             } else {
