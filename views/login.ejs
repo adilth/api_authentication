@@ -1,62 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="/style.css">
-   <title>Login Page</title>
-</head>
-
-<body>
-   <div id="page" class="site">
-      <div class="cont">
-         <div class="wrapper">
-            <div class="login">
-               <div class="content-heading">
-                  <div class="y-style">
-                     <div class="logo"><a href="#">.web<span>Travel</span></a></div>
-                     <div class="welcome">
-                        <h2>Welcome<span class="under">Back!</span></h2>
-                        <p>Get start to see the world</p>
-                     </div>
+<div id="page" class="site">
+   <div class="cont">
+      <div class="wrapper">
+         <div class="login">
+            <div class="content-heading">
+               <div class="y-style">
+                  <div class="logo"><a href="#">.web<span>Travel</span></a></div>
+                  <div class="welcome">
+                     <h2>Welcome<span class="under">Back!</span></h2>
+                     <p>Get start to see the world</p>
                   </div>
                </div>
-               <div class="content-form">
-                  <div class="y-style">
+            </div>
+            <div class="content-form">
+               <div class="y-style">
 
-                     <%- include ("./msg/messages"); %>
-                     <form action="/user/login" method="post">
-                        <p>
-                           <label for="email">Email</label>
-                           <input type="email" name="email" placeholder="name@email.com" id="email" required>
-                        </p>
-                        <p>
-                           <label for="password">password</label>
-                           <input type="password" name="password" value="" placeholder="******** " id="password"
-                              required>
-                        </p>
-                        <p class="check">
-                           <input type="checkbox" name="ckeck" id="remember">
-                           <label for="remember">remember me</label>
-                        </p>
-                        <p class="forget"><a href="#">Forget password</a></p>
-                        <button type="submit" class="btn" id="login">Login</button>
-                     </form>
-                     <div class="afterform">
-                        <p>don't have an account </p>
-                        <a href="/user/register" class="t-signup">signUp</a>
-                     </div>
+                  <%- include ("./msg/messages"); %>
+                  <form action="/user/login" method="post">
+                     <p>
+                        <label for="email">Email</label>
+                        <input type="email" name="email" placeholder="name@email.com" id="email" required>
+                     </p>
+                     <p>
+                        <label for="password">password</label>
+                        <input type="password" name="password" value="" placeholder="******** " id="password" required>
+                     </p>
+                     <p class="check">
+                        <input type="checkbox" name="ckeck" id="remember">
+                        <label for="remember">remember me</label>
+                     </p>
+                     <p class="forget"><a href="#">Forget password</a></p>
+                     <button type="submit" class="btn" id="login">Login</button>
+                  </form>
+                  <div class="afterform">
+                     <p>don't have an account </p>
+                     <a href="/user/register" class="t-signup">signUp</a>
                   </div>
                </div>
             </div>
          </div>
       </div>
    </div>
+</div>
 
-   <script src="/app.js"></script>
-   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-</body>
-
-</html>
+<script src="/app.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
