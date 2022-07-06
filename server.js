@@ -31,7 +31,7 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
   })
 );
 app.use(passport.initialize());
@@ -52,7 +52,8 @@ app.use(
 );
 //current User
 app.use(function (req, res, next) {
-  res.locals.currentUser = req.user;
+  res.locals.login = req.isAuthenticated();
+  res.locals.user = req.user || false;
   next();
 });
 app.use("/user", autherRouter);
