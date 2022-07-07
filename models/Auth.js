@@ -15,6 +15,11 @@ const AuthSchma = new mongoose.Schema({
     required: true,
     min: 8,
   },
+  token: { type: String },
+  role: {
+    type: "String",
+    default: "basic",
+  },
   date: {
     type: Date,
     default: Date.now,
