@@ -17,7 +17,9 @@ const PORT = process.env.PORT || 4000;
 const passport = require("passport");
 //connect to DB
 require("./passport-config")(passport);
-mongoose.connect(process.env.CONNECT_DB, () => console.log("Connect to DB"));
+mongoose.connect(process.env.CONNECT_DB, { useNewUrlParser: true }, () =>
+  console.log("Connect to DB")
+);
 
 //router middleware
 // app.use(express.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
@@ -37,6 +39,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(function (req, res, next) {
+  // res.locals.login = req.isAuthenticated();
+  // res.locals.user = req.user || false;
+  res.locals.session = req.session;
+  next();
+});
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -51,11 +59,7 @@ app.use(
   })
 );
 //current User
-app.use(function (req, res, next) {
-  res.locals.login = req.isAuthenticated();
-  res.locals.user = req.user || false;
-  next();
-});
+
 app.use("/user", autherRouter);
 app.use("/home", passport.authenticate("session"), homeRouter);
 app.use("/posts", postsRouter);
