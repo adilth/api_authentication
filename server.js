@@ -12,7 +12,7 @@ require("dotenv").config();
 //import routers
 const autherRouter = require("./routers/auther");
 const homeRouter = require("./routers/home");
-const postsRouter = require("./routers/Posts");
+// const postsRouter = require("./routers/Posts");
 const PORT = process.env.PORT || 4000;
 const passport = require("passport");
 //connect to DB
@@ -59,10 +59,10 @@ app.use(
   })
 );
 //current User
-
+// app.use("/getUser")
 app.use("/user", autherRouter);
-app.use("/home", passport.authenticate("session"), homeRouter);
-app.use("/posts", postsRouter);
+app.use("/home", homeRouter);
+// app.use("/posts", postsRouter);
 
 // app.get("/", (req, res) => {
 //   res.render("index.ejs");
