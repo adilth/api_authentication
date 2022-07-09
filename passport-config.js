@@ -37,6 +37,7 @@ const User = require("./models/Auth");
 
 module.exports = function (passport) {
   passport.use(
+    "local",
     new Strategy(
       { usernameField: "email", passwordField: "password" },
       async (email, password, done) => {
@@ -45,9 +46,7 @@ module.exports = function (passport) {
         // then((user) => {
         try {
           if (!user) {
-            return done(null, false, {
-              message: "That email is not registered",
-            });
+            return done(null, false, { message: message.err });
           }
 
           // Match password
@@ -63,9 +62,8 @@ module.exports = function (passport) {
           });
         } catch (err) {
           console.log(err);
-          return done(err);
+          return done(null, false, { message: "Something went wrong" });
         }
-
         // });
       }
     )
