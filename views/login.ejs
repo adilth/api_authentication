@@ -13,9 +13,12 @@
             </div>
             <div class="content-form">
                <div class="y-style">
-
+                  <!-- <div id="alert"></div> -->
+                  <% if (messages.error) { %>
+                  <%= messages.error %>
+                  <% } %>
                   <%- include ("./msg/messages"); %>
-                  <form action="/user/login" method="post">
+                  <form action="/user/login" method="post" class="login-form">
                      <p>
                         <label for="email">Email</label>
                         <input type="email" name="email" placeholder="name@email.com" id="email" required>
@@ -42,5 +45,36 @@
    </div>
 </div>
 
-<script src="/app.js"></script>
+<script>
+   // let display = document.getElementById("alert");
+   const form = document.querySelector(".login-form");
+   const email = document.querySelector("#email");
+   const password = document.querySelector("#password");
+
+   form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      // display.textContent = "";
+      try {
+         const res = await fetch("/user/login", {
+            method: "POST", // or 'PUT'
+            body: JSON.stringify({
+               email: email.value,
+               password: password.value,
+            }), // data can be `string` or {object}!
+            headers: {
+               "Content-Type": "application/json",
+            },
+         });
+         const data = await res.json();
+         if (res.status === 400 || res.status === 401) {
+            return messages.error = `${data.message}. ${data.error ? data.error : ''}`
+         }
+         data.role === "admin" ?
+            location.assign("home/admin") :
+            location.assign("/home");
+      } catch (err) {
+         console.log(err.message);
+      }
+   });
+</script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
