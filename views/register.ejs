@@ -26,32 +26,31 @@
                </div>
                <div class="content-form">
                   <div class="y-style">
+                     <div id="alert"></div>
                      <% if (messages.error) { %>
                      <%= messages.error %>
                      <% } %>
                      <%- include ("./msg/messages"); %>
-                     <form action="/user/register" method="post">
+                     <form action="/user/register" method="POST" class="form-register">
                         <p class="worning" id="worning"></p>
                         <p>
                            <label for="name">Name</label>
-                           <input type="text" name="name" placeholder="Enter Your name" id="name"
-                              value="<%= typeof name != 'undefined' ? name : '' %>" required>
+                           <input type="text" name="name" placeholder="Enter Your name" id="name" required>
                         </p>
                         <p>
                            <label for="email">Email</label>
-                           <input type="text" name="email" placeholder="name@email.com"
-                              value="<%= typeof email != 'undefined' ? email : '' %>" id="email" required>
+                           <input type="text" name="email" placeholder="name@email.com" id="email" required>
                         </p>
                         <p>
                            <label for="password">password</label>
                            <input type="password" name="password" value="" placeholder="******** " id="password"
-                              value="<%= typeof password != 'undefined' ? password : '' %>" required>
+                              required>
                         </p>
                         <p class=" check">
                            <input type="checkbox" name="ckeck" id="terms">
                            <label for="terms">I agree to all statement includes</label>
                         </p>
-                        <button type="submit" class="btn">Rigister</button>
+                        <button type="submit" class="btn" value="register">Rigister</button>
 
                      </form>
                      <div class="social">
@@ -78,7 +77,40 @@
          </div>
       </div>
    </div>
-   <script src="/app.js"></script>
+   <!-- <script src="/app.js"></script> -->
+
+   <script>
+      const form = document.querySelector('.form-register')
+      const email = document.querySelector('#email')
+      const name = document.querySelector('#name')
+      const password = document.querySelector('#password')
+      const display = document.querySelector('#alert')
+      form.addEventListener('submit', async (e) => {
+         e.preventDefault()
+         display.textContent = ''
+         try {
+            const res = await fetch('/user/register', {
+               method: 'POST',
+               body: JSON.stringify({
+                  name: name.value,
+                  email: email.value,
+                  password: password.value
+               }),
+               headers: {
+                  'Content-Type': 'application/json'
+               }
+            })
+            const data = await res.json()
+            console.log(data)
+            if (res.status === 400 || res.status === 401) {
+               return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
+            }
+            data.role === "admin" ? location.assign('/home/admin') : location.assign('/user/login')
+         } catch (err) {
+            console.log(err.message)
+         }
+      })
+   </script>
    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 </body>
 
