@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const flash = require("express-flash");
 const bcrypt = require("bcryptjs");
+const methodOverride = require("method-override");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const expressLayouts = require("express-ejs-layouts");
@@ -33,19 +34,19 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride("_method"));
 app.use(flash());
-app.use(function (req, res, next) {
-  // res.locals.login = req.isAuthenticated();
-  // res.locals.user = req.user || false;
-  res.locals.session = req.session;
-  next();
-});
+app.use(passport.authenticate("session"));
 app.use((req, res, next) => {
+  res.locals.loggedIn = req.isAuthenticated();
+  res.locals.user = req.user || false;
+  res.locals.session = req.session;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.errorLogin = req.flash("errorLogin");
